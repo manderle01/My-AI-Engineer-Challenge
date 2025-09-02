@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Chat - AI Developer Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="ocean-background">
+        <div class="waves">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <h1>Ocean Chat</h1>
+            </div>
+            <p class="subtitle">Your AI Developer Assistant</p>
+        </header>
+
+        <main class="main-content">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2><i class="fas fa-comments"></i> Chat with AI</h2>
+                    <div class="model-selector">
+                        <label for="model">Model:</label>
+                        <select id="model" class="model-dropdown">
+                            <option value="gpt-4.1-mini">GPT-4.1 Mini</option>
+                            <option value="gpt-4">GPT-4</option>
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message system-message">
+                        <div class="message-content">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Welcome to Ocean Chat! Enter your OpenAI API key and start chatting with AI. The developer message helps guide the AI's behavior.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="input-group">
+                        <label for="apiKey">OpenAI API Key:</label>
+                        <input 
+                            type="password" 
+                            id="apiKey" 
+                            placeholder="Enter your OpenAI API key"
+                            class="api-key-input"
+                        >
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="developerMessage">Developer Message (Optional):</label>
+                        <textarea 
+                            id="developerMessage" 
+                            placeholder="Instructions for the AI (e.g., 'You are a helpful coding assistant')"
+                            class="developer-input"
+                            rows="2"
+                        ></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="userMessage">Your Message:</label>
+                        <div class="message-input-container">
+                            <textarea 
+                                id="userMessage" 
+                                placeholder="Ask me anything about coding, development, or any topic..."
+                                class="user-input"
+                                rows="3"
+                            ></textarea>
+                            <button id="sendButton" class="send-button" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Ocean Chat. Built with ❤️ and FastAPI</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
