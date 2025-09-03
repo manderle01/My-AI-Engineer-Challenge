@@ -126,6 +126,28 @@ async def test_endpoint():
         }
     }
 
+# Debug static files endpoint
+@app.get("/api/debug-static")
+async def debug_static():
+    """Debug endpoint to check static file configuration"""
+    return {
+        "frontend_path": str(frontend_path),
+        "frontend_exists": frontend_path.exists(),
+        "frontend_absolute": str(frontend_path.absolute()),
+        "current_working_dir": str(Path.cwd()),
+        "api_dir": str(Path(__file__).parent),
+        "static_files": [
+            str(frontend_path / "index.html"),
+            str(frontend_path / "script.js"),
+            str(frontend_path / "styles.css")
+        ],
+        "files_exist": {
+            "index.html": (frontend_path / "index.html").exists(),
+            "script.js": (frontend_path / "script.js").exists(),
+            "styles.css": (frontend_path / "styles.css").exists()
+        }
+    }
+
 # Debug endpoint to see request format
 @app.post("/api/debug")
 async def debug_request(request: dict):
