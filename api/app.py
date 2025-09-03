@@ -32,7 +32,7 @@ if frontend_path.exists():
 # Define the data model for chat requests using Pydantic
 # This ensures incoming request data is properly validated
 class ChatRequest(BaseModel):
-    developer_message: str  # Message from the developer/system
+    developer_message: Optional[str] = ""  # Message from the developer/system (optional)
     user_message: str      # Message from the user
     model: Optional[str] = "gpt-4.1-mini"  # Optional model selection with default
     api_key: str          # OpenAI API key for authentication
@@ -73,15 +73,22 @@ async def chat(request: ChatRequest):
         # Initialize OpenAI client with the provided API key
         client = OpenAI(api_key=request.api_key)
         
+        # Prepare messages array
+        messages = []
+        
+        # Add developer message only if it's not empty
+        if request.developer_message and request.developer_message.strip():
+            messages.append({"role": "developer", "content": request.developer_message})
+        
+        # Add user message
+        messages.append({"role": "user", "content": request.user_message})
+        
         # Create an async generator function for streaming responses
         async def generate():
             # Create a streaming chat completion request
             stream = client.chat.completions.create(
                 model=request.model,
-                messages=[
-                    {"role": "developer", "content": request.developer_message},
-                    {"role": "user", "content": request.user_message}
-                ],
+                messages=messages,
                 stream=True  # Enable streaming response
             )
             
@@ -101,6 +108,15 @@ async def chat(request: ChatRequest):
 @app.get("/api/health")
 async def health_check():
     return {"status": "ok"}
+
+# Debug endpoint to see request format
+@app.post("/api/debug")
+async def debug_request(request: dict):
+    """Debug endpoint to see what data is being sent"""
+    return {
+        "received_data": request,
+        "message": "This endpoint shows you exactly what data was received"
+    }
 
 # Entry point for running the application directly
 if __name__ == "__main__":
