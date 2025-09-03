@@ -2,19 +2,16 @@
   "version": 2,
   "builds": [
     {
-      "src": "frontend/**",
+      "src": "*.html",
       "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/static/(.*)",
-      "dest": "/frontend/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/frontend/index.html"
+      "src": "*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.js",
+      "use": "@vercel/static"
     }
-  ],
-  "outputDirectory": "frontend"
+  ]
 } 
