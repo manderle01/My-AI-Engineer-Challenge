@@ -357,3 +357,34 @@ function addTooltips() {
 
 // Initialize tooltips
 addTooltips();
+
+// Test function - call this from console to test
+window.testOceanChat = function() {
+    console.log("🧪 Testing Ocean Chat functionality...");
+    console.log("Current state:", {
+        isStreaming: isStreaming,
+        hasApiKey: !!apiKeyInput.value,
+        hasUserMessage: !!userMessageInput.value,
+        sendButtonDisabled: sendButton.disabled
+    });
+    
+    // Test DOM elements
+    const elements = {
+        chatMessages: document.getElementById('chatMessages'),
+        apiKey: document.getElementById('apiKey'),
+        userMessage: document.getElementById('userMessage'),
+        sendButton: document.getElementById('sendButton')
+    };
+    
+    console.log("DOM elements:", elements);
+    
+    // Test if we can add a message
+    try {
+        addMessage('system', 'Test message from console');
+        console.log("✅ Message addition works!");
+    } catch (error) {
+        console.error("❌ Message addition failed:", error);
+    }
+    
+    return "Test complete! Check console for results.";
+};
