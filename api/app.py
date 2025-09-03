@@ -1,13 +1,15 @@
 # Import required FastAPI components for building the API
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 # Import Pydantic for data validation and settings management
 from pydantic import BaseModel
 # Import OpenAI client for interacting with OpenAI's API
 from openai import OpenAI
 import os
 from typing import Optional
+from pathlib import Path
 
 # Initialize FastAPI application with a title
 app = FastAPI(title="OpenAI Chat API")
@@ -22,6 +24,11 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers in requests
 )
 
+# Mount static files from the frontend directory
+frontend_path = Path(__file__).parent.parent / "frontend"
+if frontend_path.exists():
+    app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
+
 # Define the data model for chat requests using Pydantic
 # This ensures incoming request data is properly validated
 class ChatRequest(BaseModel):
@@ -29,6 +36,35 @@ class ChatRequest(BaseModel):
     user_message: str      # Message from the user
     model: Optional[str] = "gpt-4.1-mini"  # Optional model selection with default
     api_key: str          # OpenAI API key for authentication
+
+# Root route to serve the frontend
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    """Serve the main frontend HTML file"""
+    frontend_file = frontend_path / "index.html"
+    if frontend_file.exists():
+        with open(frontend_file, 'r', encoding='utf-8') as f:
+            return HTMLResponse(content=f.read())
+    else:
+        return HTMLResponse(content="""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Ocean Chat - Frontend Not Found</title>
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                .error { color: #e74c3c; }
+                .info { color: #3498db; }
+            </style>
+        </head>
+        <body>
+            <h1 class="error">Frontend Not Found</h1>
+            <p class="info">The frontend files are not in the expected location.</p>
+            <p>Please ensure the frontend directory exists and contains index.html</p>
+            <p>Current working directory: {}</p>
+        </body>
+        </html>
+        """.format(frontend_path))
 
 # Define the main chat endpoint that handles POST requests
 @app.post("/api/chat")
