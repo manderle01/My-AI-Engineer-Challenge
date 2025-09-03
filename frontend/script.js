@@ -202,6 +202,7 @@ function addMessage(type, content, isLoading = false) {
                         <span></span>
                     </div>
                 </div>
+                <p style="display: none;"></p>
             </div>
         `;
     } else {
@@ -224,9 +225,17 @@ function addMessage(type, content, isLoading = false) {
 
 // Update message content (for streaming)
 function updateMessageContent(messageElement, content) {
+    console.log('Updating message content:', { messageElement, content });
     const contentElement = messageElement.querySelector('p');
+    console.log('Found content element:', contentElement);
+    
     if (contentElement) {
+        contentElement.style.display = 'block';
         contentElement.innerHTML = escapeHtml(content);
+        console.log('Content updated successfully');
+    } else {
+        console.error('No p element found in message:', messageElement);
+        console.log('Message HTML:', messageElement.innerHTML);
     }
 }
 
