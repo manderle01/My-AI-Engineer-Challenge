@@ -50,13 +50,21 @@
                 </div>
 
                 <div class="chat-input-container">
+                    <div class="message demo-notice">
+                        <div class="message-content">
+                            <i class="fas fa-info-circle"></i>
+                            <p><strong>Demo Mode:</strong> This shows the beautiful Ocean Chat interface. To use the full AI chat functionality, deploy the FastAPI backend separately on Railway, Render, or similar services.</p>
+                        </div>
+                    </div>
+                    
                     <div class="input-group">
                         <label for="apiKey">OpenAI API Key:</label>
                         <input 
                             type="password" 
                             id="apiKey" 
-                            placeholder="Enter your OpenAI API key"
+                            placeholder="Demo mode - API key not required"
                             class="api-key-input"
+                            disabled
                         >
                     </div>
                     
@@ -64,9 +72,10 @@
                         <label for="developerMessage">Developer Message (Optional):</label>
                         <textarea 
                             id="developerMessage" 
-                            placeholder="Instructions for the AI (e.g., 'You are a helpful coding assistant')"
+                            placeholder="Demo mode - not functional"
                             class="developer-input"
                             rows="2"
+                            disabled
                         ></textarea>
                     </div>
 
@@ -75,9 +84,10 @@
                         <div class="message-input-container">
                             <textarea 
                                 id="userMessage" 
-                                placeholder="Ask me anything about coding, development, or any topic..."
+                                placeholder="Demo mode - type to see the beautiful interface"
                                 class="user-input"
                                 rows="3"
+                                disabled
                             ></textarea>
                             <button id="sendButton" class="send-button" disabled>
                                 <i class="fas fa-paper-plane"></i>
