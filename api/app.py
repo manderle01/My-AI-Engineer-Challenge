@@ -109,6 +109,23 @@ async def chat(request: ChatRequest):
 async def health_check():
     return {"status": "ok"}
 
+# Simple test endpoint
+@app.get("/api/test")
+async def test_endpoint():
+    """Simple test endpoint to verify the server is working"""
+    return {
+        "status": "success",
+        "message": "Server is running and responding!",
+        "timestamp": "now",
+        "endpoints": {
+            "health": "/api/health",
+            "test": "/api/test",
+            "test_openai": "/api/test-openai (POST with API key)",
+            "chat": "/api/chat (POST with chat request)",
+            "debug": "/api/debug (POST with any data)"
+        }
+    }
+
 # Debug endpoint to see request format
 @app.post("/api/debug")
 async def debug_request(request: dict):
@@ -149,6 +166,20 @@ async def test_openai(request: dict):
             "error": str(e),
             "message": "OpenAI API test failed"
         }
+
+# GET version of test endpoint for browser testing
+@app.get("/api/test-openai")
+async def test_openai_get():
+    """Test endpoint accessible via GET request"""
+    return {
+        "message": "This is a GET endpoint for testing",
+        "instructions": "To test your OpenAI API key, use POST with your API key in the request body",
+        "example": {
+            "method": "POST",
+            "url": "/api/test-openai",
+            "body": {"api_key": "your-api-key-here"}
+        }
+    }
 
 # Entry point for running the application directly
 if __name__ == "__main__":

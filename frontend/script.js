@@ -109,27 +109,55 @@ async function sendMessage() {
             body: JSON.stringify(payload)
         });
         
+        console.log('Response received:', response);
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        // Handle streaming response
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let aiResponse = '';
-        
-        while (true) {
-            const { done, value } = await reader.read();
+        // Try streaming first, fallback to regular response if streaming fails
+        try {
+            // Handle streaming response
+            console.log('Starting to read stream...');
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let aiResponse = '';
+            let chunkCount = 0;
             
-            if (done) {
-                break;
+            while (true) {
+                console.log(`Reading chunk ${chunkCount + 1}...`);
+                const { done, value } = await reader.read();
+                
+                if (done) {
+                    console.log('Stream complete, total chunks:', chunkCount);
+                    break;
+                }
+                
+                chunkCount++;
+                const chunk = decoder.decode(value, { stream: true });
+                console.log(`Chunk ${chunkCount}:`, chunk);
+                aiResponse += chunk;
+                
+                // Update AI message content
+                updateMessageContent(aiMessageElement, aiResponse);
             }
             
-            const chunk = decoder.decode(value, { stream: true });
-            aiResponse += chunk;
+            console.log('Final AI response:', aiResponse);
             
-            // Update AI message content
-            updateMessageContent(aiMessageElement, aiResponse);
+        } catch (streamError) {
+            console.log('Streaming failed, trying regular response:', streamError);
+            
+            // Fallback: try to get the response as text
+            try {
+                const responseText = await response.text();
+                console.log('Fallback response text:', responseText);
+                updateMessageContent(aiMessageElement, responseText);
+            } catch (fallbackError) {
+                console.error('Fallback also failed:', fallbackError);
+                throw new Error(`Streaming failed: ${streamError.message}, Fallback failed: ${fallbackError.message}`);
+            }
         }
         
         // Remove loading animation
