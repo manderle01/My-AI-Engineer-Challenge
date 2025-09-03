@@ -26,8 +26,21 @@ app.add_middleware(
 
 # Mount static files from the frontend directory
 frontend_path = Path(__file__).parent.parent / "frontend"
+print(f"Frontend path: {frontend_path}")
+print(f"Frontend path exists: {frontend_path.exists()}")
+print(f"Frontend path absolute: {frontend_path.absolute()}")
+
 if frontend_path.exists():
-    app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
+    print(f"Mounting static files from: {frontend_path}")
+    try:
+        app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
+        print("Static files mounted successfully")
+    except Exception as e:
+        print(f"Error mounting static files: {e}")
+else:
+    print(f"ERROR: Frontend path does not exist: {frontend_path}")
+    print(f"Current working directory: {Path.cwd()}")
+    print(f"API directory: {Path(__file__).parent}")
 
 # Define the data model for chat requests using Pydantic
 # This ensures incoming request data is properly validated
