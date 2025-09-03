@@ -118,6 +118,38 @@ async def debug_request(request: dict):
         "message": "This endpoint shows you exactly what data was received"
     }
 
+# Test OpenAI API endpoint
+@app.post("/api/test-openai")
+async def test_openai(request: dict):
+    """Test OpenAI API connection and basic functionality"""
+    try:
+        api_key = request.get("api_key")
+        if not api_key:
+            return {"error": "API key required"}
+        
+        client = OpenAI(api_key=api_key)
+        
+        # Try a simple completion
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": "Say 'Hello, OpenAI API is working!'"}],
+            max_tokens=50
+        )
+        
+        return {
+            "status": "success",
+            "message": "OpenAI API is working!",
+            "response": response.choices[0].message.content,
+            "model_used": "gpt-3.5-turbo"
+        }
+        
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "message": "OpenAI API test failed"
+        }
+
 # Entry point for running the application directly
 if __name__ == "__main__":
     import uvicorn
