@@ -1,0 +1,13 @@
+{
+  "name": "ocean-chat",
+  "version": "1.0.0",
+  "description": "Beautiful ocean-themed AI chat interface",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'This is a static site - no build step needed'",
+    "build": "echo 'Static files are ready to deploy'"
+  },
+  "keywords": ["chat", "ai", "ocean", "frontend"],
+  "author": "Your Name",
+  "license": "MIT"
+}
